@@ -1,0 +1,104 @@
+[gd_scene load_steps=6 format=3 uid="uid://dutc1gq8dp4bu"]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_fmklc"]
+[ext_resource type="FontFile" uid="uid://dpxlgkyp7ximg" path="res://fonts/absender1.ttf" id="1_qohgl"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ir2eo"]
+font = ExtResource("1_qohgl")
+font_size = 45
+font_color = Color(1, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_2mkgo"]
+font = ExtResource("1_qohgl")
+font_size = 30
+font_color = Color(1, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_fxsk5"]
+font = ExtResource("1_qohgl")
+font_size = 40
+font_color = Color(1, 0, 0, 1)
+
+[node name="HUD" type="Node2D"]
+script = ExtResource("1_fmklc")
+
+[node name="ControlHud" type="ColorRect" parent="."]
+offset_right = 1279.0
+offset_bottom = 717.0
+color = Color(1, 1, 1, 0.184314)
+
+[node name="TitleLabel" type="Label" parent="ControlHud"]
+layout_mode = 0
+offset_left = 390.0
+offset_top = 72.0
+offset_right = 890.0
+offset_bottom = 184.0
+text = "P3qch's star shooter"
+label_settings = SubResource("LabelSettings_ir2eo")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="StartButton" type="Button" parent="ControlHud"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 515.0
+offset_top = 520.0
+offset_right = 765.0
+offset_bottom = 581.0
+theme_override_fonts/font = ExtResource("1_qohgl")
+theme_override_font_sizes/font_size = 40
+text = "Start Game"
+
+[node name="credits" type="Label" parent="ControlHud"]
+layout_mode = 0
+offset_left = 942.0
+offset_top = 671.0
+offset_right = 1279.0
+offset_bottom = 716.0
+text = "Beautiful art: jimiska
+Glorious sound fx: soup"
+label_settings = SubResource("LabelSettings_2mkgo")
+
+[node name="ScoreLabel" type="Label" parent="."]
+offset_left = 12.0
+offset_top = 13.0
+offset_right = 146.0
+offset_bottom = 72.0
+text = "0"
+label_settings = SubResource("LabelSettings_fxsk5")
+
+[node name="WpmLabel" type="Label" parent="."]
+offset_left = 1019.0
+offset_top = 13.0
+offset_right = 1201.0
+offset_bottom = 72.0
+text = "0"
+label_settings = SubResource("LabelSettings_fxsk5")
+horizontal_alignment = 2
+
+[node name="AccLabel" type="Label" parent="."]
+offset_left = 1044.0
+offset_top = 72.0
+offset_right = 1226.0
+offset_bottom = 131.0
+text = "0"
+label_settings = SubResource("LabelSettings_fxsk5")
+horizontal_alignment = 2
+
+[node name="WpmLabel2" type="Label" parent="."]
+offset_left = 1208.0
+offset_top = 13.0
+offset_right = 1268.0
+offset_bottom = 72.0
+text = "wpm"
+label_settings = SubResource("LabelSettings_fxsk5")
+
+[node name="AccLabel2" type="Label" parent="."]
+offset_left = 1235.0
+offset_top = 55.0
+offset_right = 1268.0
+offset_bottom = 114.0
+text = "%"
+label_settings = SubResource("LabelSettings_fxsk5")
+
+[connection signal="pressed" from="ControlHud/StartButton" to="." method="_on_start_button_pressed"]

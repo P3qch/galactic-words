@@ -1,0 +1,50 @@
+[gd_scene load_steps=7 format=3 uid="uid://dge5egx0wr625"]
+
+[ext_resource type="Script" path="res://scripts/player_ship.gd" id="1_ue0wy"]
+[ext_resource type="Texture2D" uid="uid://hmstcwqkvbo6" path="res://art/starship1.png" id="3_sfohg"]
+[ext_resource type="Texture2D" uid="uid://prp8sd7e2w6s" path="res://art/starship2.png" id="4_oh2dl"]
+[ext_resource type="AudioStream" uid="uid://dagijpobyhpd" path="res://soundfx/pewpew.mp3" id="5_ojsmb"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wajb0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_sfohg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_oh2dl")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_36wrg"]
+size = Vector2(95, 90)
+
+[node name="PlayerShip" type="Node2D"]
+position = Vector2(-7, 1)
+script = ExtResource("1_ue0wy")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+rotation = 1.5708
+scale = Vector2(0.2, 0.2)
+sprite_frames = SubResource("SpriteFrames_wajb0")
+autoplay = "default"
+frame_progress = 0.802377
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(23.5, 0)
+shape = SubResource("RectangleShape2D_36wrg")
+
+[node name="Cannon" type="Marker2D" parent="."]
+position = Vector2(71, -1)
+
+[node name="CannonAudio" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(71, -1)
+stream = ExtResource("5_ojsmb")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
