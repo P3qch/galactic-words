@@ -81,6 +81,13 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.pressed:
 			handle_keypress(event.as_text_key_label())
+			
+			if event.keycode == KEY_F11:
+				if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN:
+					DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED) 
+				elif DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED:
+					DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN) 
+		
 
 func get_random_word() -> String:
 	var random: float = randf()
