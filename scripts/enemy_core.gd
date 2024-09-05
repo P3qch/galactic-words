@@ -3,6 +3,7 @@ extends Area2D
 
 @export var speed: float
 @export var word_label: Label
+@export var recovery_time: float = 0.0
 
 var last_shot_at_time: float = 0
 
@@ -19,7 +20,7 @@ func _ready() -> void:
 	word_label.text = word
 	
 func _process(delta: float) -> void:
-	if Time.get_unix_time_from_system() - last_shot_at_time > 0.15:
+	if Time.get_unix_time_from_system() - last_shot_at_time > recovery_time:
 		var angle: float = get_angle_to(target_pos)
 		position += Vector2.RIGHT.rotated(angle) * speed * delta
 
@@ -37,6 +38,3 @@ func take_damage() -> void:
 	word = word.substr(1, -1)
 	if word == "":
 		queue_free()
-
-
-	

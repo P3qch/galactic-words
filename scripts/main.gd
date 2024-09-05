@@ -11,6 +11,10 @@ var big_words: Array
 
 var mistakes_made: int = 0
 
+const MAX_SMALL_WORD_LEN: int = 7
+const MIN_BIG_WORD_LEN: int = 13
+
+
 var selected_ship: EnemyCore :
 	set(x):
 		selected_ship = x
@@ -25,17 +29,20 @@ var selected_ship: EnemyCore :
 		
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	var file: FileAccess = FileAccess.open("res://words.txt", FileAccess.READ)
+func prepare_word_arrays(filename: String) -> void:
+	var file: FileAccess = FileAccess.open(filename, FileAccess.READ)
 	words = file.get_as_text().split("\n")
-	words = words.map(func(x: String) -> String: return x.strip_escapes())
+	words = words.map(func(x: String) -> String: return x.strip_edges())
 	file.close()
 	
-	small_words = words.filter(func(x: String) -> bool: return x.length() <= 7)
-	medium_words = words.filter(func(x: String) -> bool: return x.length() > 7 and  x.length() <= 12 )
-	big_words = words.filter(func(x: String) -> bool: return x.length() > 12 )
+	small_words = words.filter(func(x: String) -> bool: return x.length() <= MAX_SMALL_WORD_LEN)
+	medium_words = words.filter(func(x: String) -> bool: return x.length() > MAX_SMALL_WORD_LEN and  x.length() < MIN_BIG_WORD_LEN )
+	big_words = words.filter(func(x: String) -> bool: return x.length() >= MIN_BIG_WORD_LEN )
 
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	prepare_word_arrays("res://words.txt")
 
 func get_ships() -> Array:
 	var result: Array
@@ -46,33 +53,38 @@ func get_ships() -> Array:
 	
 	return result
 
-func handle_keypress(c: String) -> void:
+func find_ship_by_letter(c: String) -> EnemyCore:
 	var ships: Array = get_ships()
-	var shot: bool = false
+	for ship: EnemyCore in ships:
+		if ship.word.begins_with(c):	
+			return ship
+			
+	return null
+
+func find_wpm(char_amount: float, time_taken: float) -> float:
+	return (char_amount/5) / time_taken
+
+func handle_keypress(c: String) -> void:
 	if selected_ship == null:
-		for ship: EnemyCore in ships:
-			if ship.word.begins_with(c):
-				selected_ship = ship
-				ship.select()
-				$PlayerShip.shoot_at(ship)
-				$HUD.score += 1 
-				shot = true
-				break
+		selected_ship = find_ship_by_letter(c)
+		
+		if selected_ship == null:
+			mistakes_made += 1	
+			return	
+			
+		selected_ship.select()
+
+
+	if selected_ship.word.begins_with(c):
+		$PlayerShip.shoot_at(selected_ship)	
+		$HUD.score += 1 
 	else:
-		if selected_ship.word.begins_with(c):
-				$PlayerShip.shoot_at(selected_ship)	
-				shot = true
-				$HUD.score += 1 
-	
-	if not shot:
 		mistakes_made += 1		
 	
-	if not selected_ship or selected_ship.is_queued_for_deletion():
+	if selected_ship.is_queued_for_deletion():
 		var time_taken: float = (Time.get_unix_time_from_system() - selection_time)/60
-		var words_typed: float = (selected_ship_word_len)/5
-		var wpm_entry: float = words_typed / time_taken
-
-		$HUD.wpm = wpm_entry
+		$HUD.wpm = find_wpm(selected_ship_word_len, time_taken)
+		
 		selected_ship = null
 	
 	$HUD.set_accuracy(mistakes_made)	
