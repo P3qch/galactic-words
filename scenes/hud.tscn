@@ -20,6 +20,7 @@ font_color = Color(1, 0, 0, 1)
 
 [node name="HUD" type="Node2D"]
 script = ExtResource("1_fmklc")
+metadata/_edit_group_ = true
 
 [node name="ControlHud" type="ColorRect" parent="."]
 offset_right = 1280.0
@@ -100,5 +101,16 @@ offset_right = 1268.0
 offset_bottom = 114.0
 text = "%"
 label_settings = SubResource("LabelSettings_fxsk5")
+
+[node name="LevelLabel" type="Label" parent="."]
+offset_left = 390.0
+offset_top = 184.0
+offset_right = 890.0
+offset_bottom = 296.0
+text = "Level 1"
+label_settings = SubResource("LabelSettings_ir2eo")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
 
 [connection signal="pressed" from="ControlHud/StartButton" to="." method="_on_start_button_pressed"]

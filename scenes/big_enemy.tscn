@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://bn5jd5bl2fan8"]
+
+[ext_resource type="Script" path="res://scripts/small_enemy.gd" id="1_t1q2f"]
+[ext_resource type="Texture2D" uid="uid://di4bjsqgrg2jf" path="res://art/small_enemy.png" id="2_m4xmf"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_2ecsn"]
+resource_local_to_scene = true
+font_size = 20
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2if7w"]
+size = Vector2(86, 110)
+
+[node name="BigEnemy" type="Area2D" node_paths=PackedStringArray("word_label") groups=["enemies"]]
+priority = 1
+script = ExtResource("1_t1q2f")
+target = Vector2(640, 670)
+speed = 64.0
+word_label = NodePath("WordLabel")
+recovery_time = 0.04
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.16, 0.16)
+texture = ExtResource("2_m4xmf")
+
+[node name="WordLabel" type="Label" parent="."]
+offset_left = -170.0
+offset_top = 55.0
+offset_right = 171.0
+offset_bottom = 94.0
+label_settings = SubResource("LabelSettings_2ecsn")
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(3, 1)
+shape = SubResource("RectangleShape2D_2if7w")

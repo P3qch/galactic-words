@@ -1,6 +1,9 @@
 extends Node
 
 @export var SmallEnemy: PackedScene
+@export var MediumEnemy: PackedScene
+@export var BigEnemy: PackedScene
+
 var selection_time: float
 var selected_ship_word_len: float
 
@@ -11,8 +14,13 @@ var big_words: Array
 
 var mistakes_made: int = 0
 
+var ships_to_spawn: Array
+var current_level: int = 1
+
 const MAX_SMALL_WORD_LEN: int = 7
-const MIN_BIG_WORD_LEN: int = 13
+const MIN_BIG_WORD_LEN: int = 11
+
+
 
 
 var selected_ship: EnemyCore :
@@ -73,8 +81,7 @@ func handle_keypress(c: String) -> void:
 			return	
 			
 		selected_ship.select()
-
-
+		
 	if selected_ship.word.begins_with(c):
 		$PlayerShip.shoot_at(selected_ship)	
 		$HUD.score += 1 
@@ -100,27 +107,41 @@ func _input(event: InputEvent) -> void:
 				elif DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED:
 					DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN) 
 		
+func make_ship(scene: PackedScene, wordlist: Array) -> EnemyCore:
+		$Path2D/PathFollow2D.progress_ratio = randf()
+		var enemy: EnemyCore = scene.instantiate()
+		enemy.position = $Path2D/PathFollow2D.position
+		enemy.target_pos = $PlayerShip.position
+		enemy.word = wordlist.pick_random()	
+		
+		return enemy
 
-func get_random_word() -> String:
-	var random: float = randf()
-	var result: String
-	if random < 0.7:
-		result = small_words.pick_random()
-	elif random >= 0.7 and random < 0.95:
-		result = medium_words.pick_random()
-	else:
-		result = big_words.pick_random()
-	return result
+func prepare_level(level_num: int) -> void:
+	var small_ship_num: int = 3 + level_num
+	var medium_ship_num: int = level_num / 2
+	var big_ship_num: int = level_num / 3
+	
+	for _i: int in range(small_ship_num):
+		ships_to_spawn.append(make_ship(SmallEnemy, small_words))
+	for _i: int in range(medium_ship_num):
+		ships_to_spawn.append(make_ship(MediumEnemy, medium_words))
+	for _i: int in range(big_ship_num):
+		ships_to_spawn.append(make_ship(BigEnemy, big_words))		
+	ships_to_spawn.shuffle()
+		
+func level_up() -> void:
+	current_level += 1
+	prepare_level(current_level)
+	$HUD.show_level(current_level)
 
 func _on_ship_spawn_timer_timeout() -> void:
-	$Path2D/PathFollow2D.progress_ratio = randf()
-	var enemy: EnemyCore = SmallEnemy.instantiate()
-	enemy.position = $Path2D/PathFollow2D.position
-	enemy.target_pos = $PlayerShip.position
-	enemy.word = get_random_word()
+	var ship: EnemyCore = ships_to_spawn.pop_front()
+	if ship != null:
+		add_child(ship)
 
+	if get_ships().size() == 0:
+		level_up()
 
-	add_child(enemy)
 
 
 func _on_player_ship_got_hit() -> void:
@@ -130,3 +151,5 @@ func _on_player_ship_got_hit() -> void:
 
 func _on_hud_start_game() -> void:
 	$ShipSpawnTimer.start()
+	current_level = 0
+	level_up()

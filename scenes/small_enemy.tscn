@@ -14,7 +14,7 @@ size = Vector2(57, 72)
 priority = 1
 script = ExtResource("1_fa520")
 target = Vector2(640, 670)
-speed = 70.0
+speed = 80.0
 word_label = NodePath("WordLabel")
 metadata/_edit_group_ = true
 

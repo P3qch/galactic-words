@@ -21,6 +21,8 @@ var score: int = 0 :
 	get:
 		return score
 
+func _ready() -> void:
+	$LevelLabel.modulate.a = 0
 
 func _on_start_button_pressed() -> void:
 	$ControlHud.hide()
@@ -30,6 +32,15 @@ func _on_start_button_pressed() -> void:
 func game_over_screen() -> void:
 	$ControlHud.show()
 	$ControlHud/TitleLabel.text = "GAME OVER!"
+	$LevelLabel.modulate.a = 1
 
 func set_accuracy(mistakes: int) -> void:
 	$AccLabel.text = "%.02f" % ((score as float / (score + mistakes)) * 100)
+	
+func show_level(level: int) -> void:
+	$LevelLabel.modulate.a = 1
+	$LevelLabel.text = "LEVEL " + str(level)
+	var tween: Tween = get_tree().create_tween()
+	tween.tween_property($LevelLabel, "modulate:a", 0.0, 2.0)
+
+	
