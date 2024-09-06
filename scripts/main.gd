@@ -119,7 +119,7 @@ func make_ship(scene: PackedScene, wordlist: Array) -> EnemyCore:
 func prepare_level(level_num: int) -> void:
 	var small_ship_num: int = 3 + level_num
 	var medium_ship_num: int = level_num / 2
-	var big_ship_num: int = level_num / 3
+	var big_ship_num: int = level_num / 4
 	
 	for _i: int in range(small_ship_num):
 		ships_to_spawn.append(make_ship(SmallEnemy, small_words))
@@ -141,7 +141,6 @@ func _on_ship_spawn_timer_timeout() -> void:
 
 	if get_ships().size() == 0:
 		level_up()
-
 
 
 func _on_player_ship_got_hit() -> void:
